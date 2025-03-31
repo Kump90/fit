@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const WeightLossApp());
+}
+
+class WeightLossApp extends StatelessWidget {
+  const WeightLossApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Худеем после родов дома!',
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+      ),
+      home: const HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  final List<String> weeks = const [
+    'Неделя 1',
+    'Неделя 2',
+    'Неделя 3',
+    'Неделя 4',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Худеем после родов дома!'),
+      ),
+      body: ListView.builder(
+        itemCount: weeks.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(weeks[index]),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WeekDetailsScreen(week: index + 1),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class WeekDetailsScreen extends StatelessWidget {
+  final int week;
+
+  const WeekDetailsScreen({Key? key, required this.week}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Неделя $week'),
+      ),
+      body: ListView.builder(
+        itemCount: 7,
+        itemBuilder: (context, index) {
+          final day = index + 1;
+          return ListTile(
+            title: Text('День $day'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ExerciseScreen(week: week, day: day),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ExerciseScreen extends StatelessWidget {
+  final int week;
+  final int day;
+
+  const ExerciseScreen({Key? key, required this.week, required this.day})
+      : super(key: key);
+
+  String getExercises() {
+    // Здесь можно добавить логику для загрузки упражнений из файла или базы данных
+    return "Упражнения для недели $week, дня $day:\n"
+        "- Ходьба: 20 минут\n"
+        "- Кегели: 10 повторений, 3 подхода\n"
+        "- Трансверсальные сокращения: 10 повторений, 3 подхода\n"
+        "- Растяжка кошка-корова: 1 минута";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('День $day, Неделя $week'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(getExercises()),
+      ),
+    );
+  }
+}

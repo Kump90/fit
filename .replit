@@ -1,0 +1,47 @@
+modules = ["flutter", "python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Flutter"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "WeightLossWebDemo"
+
+[[workflows.workflow]]
+name = "WeightLossWebDemo"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd web_demo && python server.py"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Flutter"
+author = 41014739
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flutter run -d web-server --web-port 5000 --web-hostname 0.0.0.0"
+
+[deployment]
+run = ["sh", "-c", "flutter run -d web-server --web-port 5000 --web-hostname 0.0.0.0"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
